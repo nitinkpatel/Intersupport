@@ -1,11 +1,11 @@
 import * as React from "react"
 import axios from "axios";
 // import './App.css';
-const {useEffect, useState} = React;
+const { useEffect, useState } = React;
 
 const fetchRandomData = () => {
   return axios.get('https://randomuser.me/api')
-    .then (({data})=> {
+    .then(({ data }) => {
       console.log(data);
       return JSON.stringify(data, null, 2);
     })
@@ -20,31 +20,31 @@ export default function App() {
 
   useEffect(() => {
     fetchRandomData().then(random => {
-    setrandomData(random || '');
+      setrandomData(random || '');
     });
-      },[])
+  }, [])
 
-  return(
-  <div>
-  <h1> hello</h1>
+  return (
+    <div>
+      <h1> hello</h1>
 
-<p>
-  {counter}
-</p>
-<button onClick = { ()=> {
-  setcounter(counter+1);
+      <p>
+        {counter}
+      </p>
+      <button onClick={() => {
+        setcounter(counter + 1);
 
-}}>Increase</button>
-<pre>
-  {randomData}
-</pre>
+      }}>Increase</button>
+      <pre>
+        {randomData}
+      </pre>
 
-{/* <button onClick = { ()=> {
+      {/* <button onClick = { ()=> {
 fetchRandomData();
 }}>Fetch Data</button> */}
 
 
-</div>
+    </div>
   );
 }
 
@@ -160,9 +160,9 @@ fetchRandomData();
 //   }
 //     return <div className="App">
 //       <input type="text" value={state} onChange={handleChange}/>   
-          
+
 //         </div>;
-      
+
 // }
 //--------------------------------------------------------------------
 // function Child(props){
@@ -179,6 +179,159 @@ fetchRandomData();
 //     <div>
 //     <Child value={mine}/>
 //     </div>
- 
+
 //     );
 //}
+
+
+import React from 'react';
+import "./App.css";
+import { stores } from './store';
+import Diamond from './Diamond';
+
+export default function App() {
+  return (
+    <div className='App'>
+      {stores.map((store) => {
+        return <Diamond key={store.id} store={store}></Diamond>
+
+      })}
+
+    </div>
+  )
+}
+
+import React, { useState, useEffect } from 'react'
+const url = 'https://api.github.com/users';
+
+export default function App() {
+  const [users, setUsers] = useState([])
+
+  const getUsers = async () => {
+    const response = await fetch(url)
+    const users = await response.json();
+    setUsers(users);
+  }
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  return (
+    <>
+      <div className="book h1">
+
+        {users.map((user) => {
+          const { login, id, avatar_url, html_url } = user
+          return <li key={id}>
+            <img src={avatar_url} alt={login} />
+            <div>
+              <h4>{login}</h4>
+              < a href={html_url}>profile</a>
+            </div>
+
+          </li>
+
+        }
+        )}
+      </div>
+    </>
+  )
+}
+
+import React, { useState } from "react";
+
+
+export default function App() {
+  const [firstName, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
+  const [people, setPeople] = useState([])
+  const [person, setPerson] = useState({ firstName: '', email: '' })
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const email
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (firstName && email) {
+      const person = { firstName, email };
+      setPeople((people) => {
+        return [...people, person];
+      })
+    }
+    else {
+      console.log('empty')
+    }
+  };
+  return (
+    <div>
+      <article>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="firstName"> Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)} />
+          <div>
+            <label htmlFor="firstName"> Email:</label>
+            <input type="text"
+              id="firstName"
+              name="firstName"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <button type="submit">add person
+          </button>
+        </form>
+        {people.map((person) => {
+          const { id, firstName, email } = person;
+          return (
+            <div key={id}>
+              <h4>
+                {firstName}
+              </h4>
+              <p>{email}</p>
+            </div>
+          )
+        })}
+      </article>
+    </div>
+  )
+}
+
+import React, {useEffect, useRef} from 'react'
+
+export default function App() {
+  
+ 
+  const refContainer = useRef(null);
+  const divContainer = useRef(null);
+ 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(refContainer.current.value);
+    console.log(divContainer.current);
+
+  };
+  useEffect(() => {
+    console.log(refContainer.current);
+    refContainer.current.focus();
+  })
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input type = 'text' ref={refContainer}/>
+          <button type='submit'>submit</button>
+        </div>
+      </form>
+   <div ref = {divContainer}>
+     <h1>hello world</h1>
+     </div>
+    </div>
+  )
+}
